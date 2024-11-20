@@ -160,6 +160,8 @@ GEM
       devise (>= 2.1.0)
     doorkeeper (5.8.0)
       railties (>= 5)
+    down (5.4.2)
+      addressable (~> 2.8)
     drb (2.2.1)
     erubi (1.13.0)
     et-orbi (1.2.11)
@@ -570,6 +572,7 @@ DEPENDENCIES
   bootsnap
   capybara
   debug
+  down (~> 5.4)
   image_processing (~> 1.13)
   importmap-rails
   jbuilder
