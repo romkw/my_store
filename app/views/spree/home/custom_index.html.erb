@@ -1,0 +1,62 @@
+<div class="homepage">
+  <div class="homepage-hero-image position-relative">
+    <div class="hero-content position-absolute d-flex flex-column align-items-center">
+      <div class="homepage-hero-image-text mb-2">
+        <%= current_store.name %>
+      </div>
+      <%= link_to Spree.t(:shop_now), spree.products_path, class: 'spree-btn btn-primary' %>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="homepage-fashion-trends-box text-center my-5">
+      <div class="homepage-fashion-trends-box-summer-text">
+        <%= Spree.t(:new_collection) %>
+      </div>
+      <div class="homepage-fashion-trends-box-fashion-trends-text mb-4">
+        <%= Spree.t(:trending_now) %>
+      </div>
+    </div>
+
+    <% if @taxonomies.present? %>
+      <div class="section-row">
+        <div class="row">
+          <% @taxonomies.each do |taxonomy| %>
+            <div class="col-12 col-md-4 mb-4">
+              <%= link_to spree.nested_taxons_path(taxonomy.root.permalink), class: 'homepage-taxon-box position-relative' do %>
+                <div class="homepage-taxon-box-text">
+                  <h3><%= taxonomy.name %></h3>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @products.present? %>
+      <div class="section-row">
+        <h2 class="text-center mb-4"><%= Spree.t(:featured_products) %></h2>
+        <div class="row">
+          <% @products.each do |product| %>
+            <div class="col-6 col-md-3 mb-4">
+              <div class="card h-100">
+                <% if product.images.any? %>
+                  <%= link_to spree.product_path(product) do %>
+                    <%= image_tag main_app.url_for(product.images.first.attachment), class: 'card-img-top', alt: product.name %>
+                  <% end %>
+                <% end %>
+                <div class="card-body">
+                  <h5 class="card-title"><%= link_to product.name, spree.product_path(product) %></h5>
+                  <p class="card-text">
+                    <%= display_price(product) %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div> 
