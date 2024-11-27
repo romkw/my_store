@@ -36,6 +36,7 @@ namespace :import do
       def append_reviews(product, item)
         return unless item['reviews'].is_a?(Array)
         
+        # Додавання відгуків до бази даних прив'язаних до продукту
         item['reviews'].each do |review_data|
           review = product.reviews.build(
             reviewer_name: review_data['name'],
@@ -43,6 +44,7 @@ namespace :import do
             rating: item['rating'].to_i
           )
           
+          # Зберігання відгуків в базі даних
           if review.save
             puts "Додано відгук для #{product.name} від #{review.reviewer_name}"
           else
@@ -50,7 +52,7 @@ namespace :import do
           end
         end
         
-        # Оновлюємо середній рейтинг продукту
+        # Оновлення середнього рейтингу продукту
         avg_rating = product.reviews.average(:rating) || 0
         product.update_column(:avg_rating, avg_rating)
       rescue StandardError => e

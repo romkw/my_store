@@ -1,2 +1,33 @@
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+
+# Виведення всіх продуктів з бази даних
+products = Spree::Product.select(:id, :name, :price).all
+products.each do |product|
+  puts "ID: #{product.id}, Назва: #{product.name}, Ціна: #{product.price}"
+end
+
+# Виведення всіх користувачів з бази даних
+users = Spree::User.select(:id, :email).all
+users.each do |user|
+  puts "ID: #{user.id}, Email: #{user.email}"
+end
+
+# Виведення всіх способів доставки з бази даних
+shipments = Spree::Shipment.select(:id, :name).all
+shipments.each do |shipment|
+  puts "ID: #{shipment.id}, Назва: #{shipment.name}"
+end
+
+# Виведення всіх способів оплати з бази даних
+puts "\nДоступні способи оплати:"
+Spree::PaymentMethod
+  .select(:id, :name, :type, :description)
+  .active
+  .find_each do |method|
+    payment_type = method.type.demodulize == 'BogusSimple' ? 'Симуляція' : method.type.demodulize
+    puts "- #{method.name}"
+    puts "  Тип: #{payment_type}"
+    puts "  Опис: #{method.description}" if method.description.present?
+    puts ""
+end
