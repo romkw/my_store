@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_06_121215) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_27_123118) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -871,6 +871,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_06_121215) do
     t.json "private_metadata"
     t.string "status", default: "draft", null: false
     t.datetime "make_active_at", precision: nil
+    t.decimal "avg_rating", precision: 3, scale: 2, default: "0.0"
+    t.integer "reviews_count", default: 0
     t.index ["available_on"], name: "index_spree_products_on_available_on"
     t.index ["deleted_at"], name: "index_spree_products_on_deleted_at"
     t.index ["discontinue_on"], name: "index_spree_products_on_discontinue_on"
@@ -1162,6 +1164,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_06_121215) do
     t.index ["preferred_reimbursement_type_id"], name: "index_spree_return_items_on_preferred_reimbursement_type_id"
     t.index ["reimbursement_id"], name: "index_spree_return_items_on_reimbursement_id"
     t.index ["return_authorization_id"], name: "index_spree_return_items_on_return_authorization_id"
+  end
+
+  create_table "spree_reviews", force: :cascade do |t|
+    t.string "reviewer_name"
+    t.text "comment"
+    t.integer "rating"
+    t.boolean "approved", default: false
+    t.integer "product_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_spree_reviews_on_product_id"
+    t.index ["reviewer_name"], name: "index_spree_reviews_on_reviewer_name"
+    t.index ["user_id"], name: "index_spree_reviews_on_user_id"
   end
 
   create_table "spree_role_users", force: :cascade do |t|

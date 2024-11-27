@@ -48,6 +48,17 @@
                 <% end %>
                 <div class="card-body">
                   <h5 class="card-title"><%= link_to product.name, spree.product_path(product) %></h5>
+                  <div class="d-flex align-items-center mb-2">
+                    <div class="text-warning me-2">
+                      <% product.avg_rating.to_i.times do %>
+                        <i class="fas fa-star"></i>
+                      <% end %>
+                      <% (5 - product.avg_rating.to_i).times do %>
+                        <i class="far fa-star"></i>
+                      <% end %>
+                    </div>
+                    <small class="text-muted">(<%= product.reviews_count %> відгуків)</small>
+                  </div>
                   <p class="card-text">
                     <%= display_price(product) %>
                   </p>

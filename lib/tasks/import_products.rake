@@ -1,5 +1,5 @@
 namespace :import do
-    desc "Import products from PC Cloud API"
+    desc "Import products and reviews from PC Cloud API"
     task products: :environment do
       require 'net/http'
       require 'json'
@@ -31,6 +31,30 @@ namespace :import do
       rescue StandardError => e
         puts "Помилка отримання даних з API: #{e.message}"
         []
+      end
+  
+      def append_reviews(product, item)
+        return unless item['reviews'].is_a?(Array)
+        
+        item['reviews'].each do |review_data|
+          review = product.reviews.build(
+            reviewer_name: review_data['name'],
+            comment: review_data['comment'],
+            rating: item['rating'].to_i
+          )
+          
+          if review.save
+            puts "Додано відгук для #{product.name} від #{review.reviewer_name}"
+          else
+            puts "Помилка додавання відгуку: #{review.errors.full_messages.join(', ')}"
+          end
+        end
+        
+        # Оновлюємо середній рейтинг продукту
+        avg_rating = product.reviews.average(:rating) || 0
+        product.update_column(:avg_rating, avg_rating)
+      rescue StandardError => e
+        puts "Помилка при додаванні відгуків для #{product.name}: #{e.message}"
       end
   
       def create_product(item)
@@ -70,6 +94,9 @@ namespace :import do
           rescue Down::Error => e
             puts "Помилка завантаження зображення для #{item['name']}: #{e.message}"
           end
+  
+          # Додаємо відгуки окремо
+          append_reviews(product, item)
   
           puts "Створено продукт: #{product.name} (#{price} #{store.default_currency})"
           true
